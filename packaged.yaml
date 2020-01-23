@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'server
+
+  Sample SAM Template for server
+
+  '
+Resources:
+  LambdaProduct:
+    Properties:
+      CodeUri: s3://webapppresentation/61c15c7a9f1d031dedeaf7cfe0f0e61a
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        SigninEndpoint:
+          Properties:
+            Method: get
+            Path: /product
+          Type: Api
+      FunctionName: LambdaProduct
+      Handler: lambdaProducts.handler
+      Role: arn:aws:iam::768071653236:role/presentation
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

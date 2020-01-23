@@ -1,15 +1,36 @@
-'use strict';
+const { fetchProducts } = require('./products');
+const log = console.log;
 
-var fs = require('fs');
-var path = require('path');
+exports.handler = async (event, context) => {
+    const queryParams = event.queryStringParameters;
 
-exports.get = function(event, context, callback) {
-  var contents = fs.readFileSync(`public${path.sep}index.html`);
-  var result = {
-    statusCode: 200,
-    body: contents.toString(),
-    headers: {'content-type': 'text/html'}
-  };
+    try {
+        if (!queryParams.id) {
+            throw new Error('No id provided');
+        }
+        const id = queryParams.id;
+        log('Lambda Processing...');
+        const data = await fetchProducts(id);
+        log('Data: ', data);
 
-  callback(null, result);
+        const response = {
+            statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify({
+                data
+            })
+        };
+
+        return response;
+    } catch (error) {
+        log('Error: ', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: error.message || 'Internal Error'
+            })
+        }
+    }
 };

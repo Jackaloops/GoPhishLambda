@@ -1,13 +1,24 @@
 {
-    "name": "hello-world",
-    "description": "Sample NodeJs web application",
-    "version": "0.0.1",
-    "private": true,
-    "devDependencies": {
-        "mocha": "5.0.0",
-        "unit.js": "2.0.0"
-    },
-    "scripts": {
-        "test": "mocha --recursive tests"
-    }
+  "name": "hello_world",
+  "version": "1.0.0",
+  "description": "hello world sample for NodeJS",
+  "main": "src/index.js",
+  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "author": "SAM CLI",
+  "license": "MIT",
+  "dependencies": {
+    "amazon-cognito-identity-js": "^3.2.1",
+    "aws-sdk": "^2.600.0",
+    "json-dynamo-putrequest": "^1.0.0"
+  },
+  "scripts": {
+    "convert": "json-dynamo-putrequest Movies movieData.json --beautify --output dynamo.json",
+    "test": "mocha tests/unit/",
+    "package-dev": "sam package --template-file template.yaml --s3-bucket webapppresentation --output-template-file packaged.yaml",
+    "deploy-dev": "BUILD_S3_BUCKET=webapppresentation NODE_ENV=dev npm run package-dev && sam deploy --template-file ./packaged.yaml --stack-name webapppresentation --region us-east-1 --capabilities CAPABILITY_IAM"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.1.1"
+  }
 }
