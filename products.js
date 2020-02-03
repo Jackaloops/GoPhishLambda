@@ -20,6 +20,19 @@ async function fetchProducts(id) {
     });
 }
 
+async function fetchAllProducts() {
+    const params = {
+        TableName
+    } 
+    return new Promise((resolve, reject) => {
+        docClient.scan(params, function (err, data) {
+            if (err) {
+                reject(err);
+            }
+            resolve(data);
+        });
+    });
+}
 
 function generateParamsById(id) {
     const TableName = 'modules';
