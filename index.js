@@ -1,4 +1,5 @@
 const { fetchProducts } = require('./products');
+const { fetchAllProducts } = require( './products' );
 const log = console.log;
 
 exports.handler = async (event, context) => {
@@ -23,7 +24,7 @@ exports.handler = async (event, context) => {
 
             return response;
         }
-        else if( queryParams.all ) {
+        else if( queryParams.fetchAll ) {
             log( 'Lambda Processing: fetch all modules...' );
             const data = await fetchAllProducts();
             log( 'Data: ' + data )

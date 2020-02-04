@@ -51,5 +51,6 @@ function generateParamsById(id) {
 
 module.exports = {
     generateParamsById,
-    fetchProducts
+    fetchProducts,
+    fetchAllProducts
 };
