@@ -21,6 +21,7 @@ async function fetchProducts(id) {
 }
 
 async function fetchAllProducts() {
+    const TableName = 'modules';
     const params = {
         TableName
     } 
