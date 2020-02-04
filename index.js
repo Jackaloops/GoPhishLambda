@@ -44,6 +44,9 @@ exports.handler = async (event, context) => {
         log('Error: ', error);
         return {
             statusCode: 501,
+            headers: {
+                "Access-Control-Allow-Origin": "*"
+            },
             body: JSON.stringify({
                 message: error.message || 'Internal Error'
             })
