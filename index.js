@@ -25,8 +25,7 @@ exports.handler = async (event, context) => {
         }
         else if( queryParams.all ) {
             log( 'Lambda Processing: fetch all modules...' );
-            // const data = await fetchAllProducts();
-            const data = await fetchProducts(001);
+            const data = await fetchAllProducts();
             log( 'Data: ' + data )
 
             const response = {
@@ -44,7 +43,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
         log('Error: ', error);
         return {
-            statusCode: 500,
+            statusCode: 501,
             body: JSON.stringify({
                 message: error.message || 'Internal Error'
             })
