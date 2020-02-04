@@ -25,7 +25,8 @@ exports.handler = async (event, context) => {
         }
         else if( queryParams.all ) {
             log( 'Lambda Processing: fetch all modules...' );
-            const data = await fetchAllProducts();
+            // const data = await fetchAllProducts();
+            const data = await fetchProducts(001);
             log( 'Data: ' + data )
 
             const response = {
