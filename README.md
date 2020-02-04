@@ -1,64 +1,86 @@
-Welcome to the AWS CodeStar sample web application
-==================================================
+# serverless
 
-This sample code helps get you started with a simple Node.js web service deployed by AWS CloudFormation to AWS Lambda and Amazon API Gateway.
+This is a sample template for serverless - Below is a brief explanation of how GoPhish is hosting its services:
 
-What's Here
------------
+```bash
+.
+├── README.md                   <-- This instructions file
+├── serverless                 <-- Source code for a lambda function
+│   ├── index.js                  <-- Lambda function code
+│   ├── package.json            <-- NodeJS dependencies
+│   └── tests                   <-- Unit tests
+│       └── unit
+│           └── test_handler.js
+└── template.yaml               <-- SAM template (for CLI only version)
+```
 
-This sample includes:
+## Machine Requirements
 
-* README.md - this file
-* buildspec.yml - this file is used by AWS CodeBuild to package your
-  application for deployment to AWS Lambda
-* index.js - this file contains the sample Node.js code for the web service
-* template.yml - this file contains the AWS Serverless Application Model (AWS SAM) used
-  by AWS CloudFormation to deploy your application to AWS Lambda and Amazon API
-  Gateway.
-* tests/ - this directory contains unit tests for your application
-* template-configuration.json - this file contains the project ARN with placeholders used for tagging resources with the project ID
+* AWS CLI already configured with Administrator permission
+* [NodeJS 8.10+ installed](https://nodejs.org/en/download/)
 
-What Do I Do Next?
-------------------
 
-If you have checked out a local copy of your repository you can start making
-changes to the sample code.  We suggest making a small change to index.js first,
-so you can see how changes pushed to your project's repository are automatically
-picked up by your project pipeline and deployed to AWS Lambda and Amazon API Gateway.
-(You can watch the pipeline progress on your AWS CodeStar project dashboard.)
-Once you've seen how that works, start developing your own code, and have fun!
+## Setup process
 
-To run your tests locally, go to the root directory of the
-sample code and run the `npm test` command, which
-AWS CodeBuild also runs through your `buildspec.yml` file.
+### Building the project
 
-To test your new code during the release process, modify the existing tests or
-add tests to the tests directory. AWS CodeBuild will run the tests during the
-build stage of your project pipeline. You can find the test results
-in the AWS CodeBuild console.
+[AWS Lambda requires a flat folder](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html) with the application as well as its dependencies in a `node_modules` folder. When we make changes to our source code or dependency manifest.
 
-Learn more about AWS CodeBuild and how it builds and tests your application here:
-https://docs.aws.amazon.com/codebuild/latest/userguide/concepts.html
+Create a basic `index.js` with your Node.js code and place this in the root folder within the Lambda IDLE. Save changes to the function and it will call your .js file during runtime once it is invoked. 
 
-Learn more about AWS Serverless Application Model (AWS SAM) and how it works here:
-https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md
 
-AWS Lambda Developer Guide:
-http://docs.aws.amazon.com/lambda/latest/dg/deploying-lambda-apps.html
+### Development
 
-Learn more about AWS CodeStar by reading the user guide, and post questions and
-comments about AWS CodeStar on our forum.
+**Invoking function locally through AWS API Gateway**
 
-User Guide: http://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
+You must link you Lambda function to the API Gateway directly in the AWS console. Once linked, choose to Deploy API and copy and paste the `Invoke URL` from the API Gateway AWS console in your web browswer and hit enter. 
 
-Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
+If the previous URL ran successfully you should now be able to hit the following endpoint to invoke your function `/js/index.js`
 
-What Should I Do Before Running My Project in Production?
-------------------
+You may have to enable CORS and re-deploy your API if you are not able to run the Lambda code. 
 
-AWS recommends you review the security best practices recommended by the framework
-author of your selected sample application before running it in production. You
-should also regularly review and apply any available patches or associated security
-advisories for dependencies used within your application.
+**SAM CLI** is used to emulate both Lambda and API Gateway locally and uses the `template.yaml` to test and understand how to bootstrap this environment (runtime, where the source code is, etc.) - The following excerpt is what the CLI will read in order to initialize an API and its routes:
 
-Best Practices: https://docs.aws.amazon.com/codestar/latest/userguide/best-practices.html?icmpid=docs_acs_rm_sec
+```yaml
+...
+Events:
+    HelloWorld:
+        Type: API
+        Properties:
+            Path: /js/index.js
+            Method: get
+```
+
+## Packaging and deployment
+
+AWS Lambda NodeJS runtime requires a archive folder with all dependencies including the application. You can use any archiving utility will to package all the files.
+
+Once all files are packaged in an archive, drag and drop the archive to the Lambda function and you are ready to go. 
+
+## Testing
+
+Invoke the API Gateway URL and the Lambda function will be called, displaying your output. 
+
+# Appendix
+
+## AWS CLI commands
+
+AWS CLI commands to package, deploy and describe outputs defined within the cloudformation stack:
+
+```bash
+sam package \
+    --template-file template.yaml \
+    --output-template-file packaged.yaml \
+    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
+
+sam deploy \
+    --template-file packaged.yaml \
+    --stack-name server \
+    --capabilities CAPABILITY_IAM \
+    --parameter-overrides MyParameterSample=MySampleValue
+
+aws cloudformation describe-stacks \
+    --stack-name server --query 'Stacks[].Outputs'
+```
+
+
