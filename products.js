@@ -21,27 +21,27 @@ async function fetchProducts(id) {
 }
 
 async function fetchAllProducts() {
-    // const TableName = 'modules';
-    // const params = {
-    //     TableName
-    // } 
-    // return new Promise((resolve, reject) => {
-    //     docClient.scan(params, function (err, data) {
-    //         if (err) {
-    //             reject(err);
-    //         }
-    //         resolve(data);
-    //     });
-    // });
-    const params = generateParamsById(001);
+    const TableName = 'modules';
+    const params = {
+        TableName
+    } 
     return new Promise((resolve, reject) => {
-        docClient.query(params, function (err, data) {
+        docClient.scan(params, function (err, data) {
             if (err) {
                 reject(err);
             }
             resolve(data);
         });
     });
+    // const params = generateParamsById(001);
+    // return new Promise((resolve, reject) => {
+    //     docClient.query(params, function (err, data) {
+    //         if (err) {
+    //             reject(err);
+    //         }
+    //         resolve(data);
+    //     });
+    // });
 }
 
 function generateParamsById(id) {
