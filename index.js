@@ -1,5 +1,6 @@
 const { fetchProducts } = require('./products');
 const { fetchAllProducts } = require( './products' );
+const { fetchModulePage } = require( './products' );
 const log = console.log;
 
 exports.handler = async (event, context) => {
@@ -41,6 +42,23 @@ exports.handler = async (event, context) => {
 
             return response;
         }
+        else if( queryParams.getModulePage ) {
+
+            const data = await fetchModulePage( queryParams.getModulePage, queryParams.pageNum );
+            
+            const response = {
+                statusCode: 200,
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    data
+                }) 
+            };
+
+            return response;
+        }
+
     } catch (error) {
         log('Error: ', error);
         return {

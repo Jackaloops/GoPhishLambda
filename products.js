@@ -44,6 +44,30 @@ async function fetchAllProducts() {
     // });
 }
 
+async function fetchModulePage( modulePage, pageNum ) {
+    const TableName = 'mod_pages';
+    const params = {
+        TableName,
+        FilterExpression: "#id = :s AND #page = :iii ",
+        ExpressionAttributeNames: {
+            "#id": "moduleID",
+            "#page": "pageNum"
+        },
+        ExpressionAttributeValues: {
+            ":s": parseFloat(modulePage),
+            ":iii": parseFloat(pageNum)
+        }
+    }
+    return new Promise((resolve, reject) => {
+        docClient.scan(params, function (err, data) {
+            if (err) {
+                reject(err);
+            }
+            resolve(data);
+        });
+    });
+}
+
 function generateParamsById(id) {
     const TableName = 'modules';
     const params = {
@@ -62,5 +86,6 @@ function generateParamsById(id) {
 module.exports = {
     generateParamsById,
     fetchProducts,
-    fetchAllProducts
+    fetchAllProducts,
+    fetchModulePage
 };
