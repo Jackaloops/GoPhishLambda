@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "amazon-cognito-identity-js": "^3.2.1",
-    "aws-sdk": "^2.600.0",
+    "aws-sdk": "^2.814.0",
     "json-dynamo-putrequest": "^1.0.0"
   },
   "scripts": {
